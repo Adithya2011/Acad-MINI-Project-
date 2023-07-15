@@ -1,0 +1,68 @@
+import numpy as np
+import pandas as pd
+parkinson = pd.read_csv('parkinsons.data')
+parkinson.head(195)
+parkinson.shape
+parkinson.isnull().sum()
+parkinson.duplicated().sum()
+parkinson.info()
+parkinson.describe()
+parkinson['status'].value_counts()
+parkinson.groupby('status').mean()
+X = parkinson.drop(['status','name'],axis=1)
+Y = parkinson['status']
+X.shape
+Y.shape
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=2)
+from sklearn.preprocessing import StandardScaler
+scalar = StandardScaler()
+scalar.fit(X_train)
+X_train = scalar.transform(X_train)
+X_test = scalar.transform(X_test)
+X_train
+
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+
+
+models = {
+    "lg": LogisticRegression(),
+    "knc": KNeighborsClassifier(),
+    "svc": SVC(),
+    "gnb": GaussianNB(),
+    'dtc':DecisionTreeClassifier(),
+    'rfc':RandomForestClassifier(),
+}
+
+for name, model in models.items():
+    model.fit(X_train,y_train)
+    y_predict = model.predict(X_test)
+    
+    
+    print(f"{name} with accuracy :",accuracy_score(y_test,y_predict))
+    
+svc = SVC()
+svc.fit(X_train,y_train)
+y_predict = svc.predict(X_test)
+accuracy_score(y_test,y_predict)
+X_train[10]
+X_train[11]
+input_data = ( 1.03983688,  0.17237666,  1.67879945, -0.83410268, -0.94428847,
+       -0.73207722, -0.75558996, -0.73211087, -0.93702927, -0.90522785,
+       -0.94302224, -0.83727105, -0.87945488, -0.94333241, -0.59315683,
+        1.97537236, -0.29114466,  0.35627085, -1.24057161, -0.59088115,
+       -2.2231008 , -1.20119397)
+
+np_data = np.asanyarray(input_data)
+prediction = svc.predict(np_data.reshape(1,-1))
+
+if prediction == 1:
+    print("This person has parkinson's disease")
+else:
+    print("This person has no parkinson's disease")
