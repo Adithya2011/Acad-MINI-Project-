@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 parkinson = pd.read_csv('parkinsons.data')
-parkinson.head(195)
+parkinson.head(100)
 parkinson.shape
 parkinson.isnull().sum()
 parkinson.duplicated().sum()
